@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for, request
 app = Flask(__name__)
 
 
@@ -59,3 +59,20 @@ def about():
     about page
     """
     return 'The about page'
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """
+    login
+    """
+    if request.method == 'POST':
+        return about()
+    return index()
+
+
+with app.test_request_context():
+    print(url_for('index'))
+    print(url_for('login'))
+    print(url_for('login', next='/'))
+    print(url_for('show_user_profile', username='John Doe'))
