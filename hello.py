@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, render_template
 app = Flask(__name__)
 
 
@@ -11,11 +11,12 @@ def index():
 
 
 @app.route('/hello')
-def hello():
+@app.route('/hello/<name>')
+def hello(name=None):
     """
     hello world
     """
-    return 'Hello, World'
+    return render_template('hello.html', name=name)
 
 
 @app.route('/user/<username>')
@@ -76,3 +77,9 @@ with app.test_request_context():
     print(url_for('login'))
     print(url_for('login', next='/'))
     print(url_for('show_user_profile', username='John Doe'))
+
+with app.test_request_context('/hello', method='POST'):
+    # now you can do something with the request until the
+    # end of the with block, such as basic assertions:
+    assert request.path == '/hello'
+    assert request.method == 'POST'
